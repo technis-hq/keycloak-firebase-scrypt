@@ -2,20 +2,24 @@ plugins {
     java
 }
 
-group = "com.github.leroyguillaume"
-version = "1.5.0"
+group = "com.smartmovesystems.keycloak.firebasescrypt"
+version = "0.0.1"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    val bcryptVersion = "0.9.0"
+    val scryptVersion = "1.4.0"
+    val commonsCodecVersion = "1.4"
     val jbossLoggingVersion = "3.4.1.Final"
     val keycloakVersion = "10.0.1"
 
-    // BCrypt
-    implementation("at.favre.lib:bcrypt:$bcryptVersion")
+    // Scrypt
+    implementation("com.lambdaworks:scrypt:$scryptVersion")
+
+    // Encoding
+    implementation("commons-codec:commons-codec:$commonsCodecVersion")
 
     // JBoss
     compileOnly("org.jboss.logging:jboss-logging:$jbossLoggingVersion")
@@ -24,6 +28,7 @@ dependencies {
     compileOnly("org.keycloak:keycloak-common:$keycloakVersion")
     compileOnly("org.keycloak:keycloak-core:$keycloakVersion")
     compileOnly("org.keycloak:keycloak-server-spi:$keycloakVersion")
+    compileOnly("org.keycloak:keycloak-model-jpa:$keycloakVersion")
     compileOnly("org.keycloak:keycloak-server-spi-private:$keycloakVersion")
 }
 
