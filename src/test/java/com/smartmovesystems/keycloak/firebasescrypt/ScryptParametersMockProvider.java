@@ -1,7 +1,7 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
 import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersMappingEntity;
+import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,7 @@ public class ScryptParametersMockProvider implements ScryptParametersProvider {
 
 
     @Override
-    public ScryptHashParametersMappingEntity getMappingEntityForCredentialId(String credentialId) {
+    public ScryptHashParametersCredentialEntity getMappingEntityForCredentialId(String credentialId) {
         // There should only be one parameter mapping per credential Id
         return parametersEntityList
                 .stream()

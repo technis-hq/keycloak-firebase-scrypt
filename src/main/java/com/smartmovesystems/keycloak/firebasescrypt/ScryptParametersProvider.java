@@ -1,9 +1,9 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
 import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersMappingEntity;
+import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
 
 public interface ScryptParametersProvider {
-    ScryptHashParametersMappingEntity getMappingEntityForCredentialId(String credentialId);
+    ScryptHashParametersCredentialEntity getMappingEntityForCredentialId(String credentialId);
     ScryptHashParametersEntity getDefaultParameters();
 }

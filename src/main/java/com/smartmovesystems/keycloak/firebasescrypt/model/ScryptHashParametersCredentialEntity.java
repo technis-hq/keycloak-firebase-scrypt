@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "SCRYPT_PARAMS_MAPPING")
+@Table(name = "SCRYPT_PARAMS_CREDENTIAL")
 @NamedQueries({
-    @NamedQuery(name = "findForCredential", query = "SELECT s FROM ScryptHashParametersMappingEntity s WHERE s.credentialId = :credentialId"),
+    @NamedQuery(name = "findForCredential", query = "SELECT s FROM ScryptHashParametersCredentialEntity s WHERE s.credentialId = :credentialId"),
 })
-public class ScryptHashParametersMappingEntity implements Serializable {
+public class ScryptHashParametersCredentialEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class ScryptHashParametersMappingEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ScryptHashParametersMappingEntity that = (ScryptHashParametersMappingEntity) o;
+        ScryptHashParametersCredentialEntity that = (ScryptHashParametersCredentialEntity) o;
         return Objects.equals(id, that.id);
     }
 

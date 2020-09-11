@@ -35,8 +35,8 @@ public class ScryptHashParametersEntity implements Serializable {
     @Column(name = "IS_DEFAULT")
     private boolean isDefault;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hashParametersEntity")
-    private Collection<ScryptHashParametersMappingEntity> credentialMappings = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Collection<ScryptHashParametersCredentialEntity> credentialMappings = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -86,7 +86,7 @@ public class ScryptHashParametersEntity implements Serializable {
         isDefault = aDefault;
     }
 
-    public Collection<ScryptHashParametersMappingEntity> getCredentialMappings() {
+    public Collection<ScryptHashParametersCredentialEntity> getCredentialMappings() {
         return credentialMappings;
     }
 
@@ -94,7 +94,7 @@ public class ScryptHashParametersEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ScryptHashParametersMappingEntity that = (ScryptHashParametersMappingEntity) o;
+        ScryptHashParametersCredentialEntity that = (ScryptHashParametersCredentialEntity) o;
         return Objects.equals(id, that.id);
     }
 

@@ -2,7 +2,7 @@ package com.smartmovesystems.keycloak.firebasescrypt;
 
 
 import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersMappingEntity;
+import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,14 +29,14 @@ public class ScryptPasswordHashProviderTest {
         parametersEntityOne.setDefault(true);
 
         // Map user 1 -> hash parameters entity 1
-        ScryptHashParametersMappingEntity userOneMapping = new ScryptHashParametersMappingEntity();
+        ScryptHashParametersCredentialEntity userOneMapping = new ScryptHashParametersCredentialEntity();
         userOneMapping.setCredentialId("1");
         userOneMapping.setHashParametersEntity(parametersEntityOne);
         userOneMapping.setId("1");
         parametersEntityOne.getCredentialMappings().add(userOneMapping);
 
         // Map user 2 -> hash parameters entity 1
-        ScryptHashParametersMappingEntity userTwoMapping = new ScryptHashParametersMappingEntity();
+        ScryptHashParametersCredentialEntity userTwoMapping = new ScryptHashParametersCredentialEntity();
         userTwoMapping.setCredentialId("2");
         userTwoMapping.setHashParametersEntity(parametersEntityOne);
         userTwoMapping.setId("2");
@@ -50,14 +50,14 @@ public class ScryptPasswordHashProviderTest {
         parametersEntityTwo.setDefault(false);
 
         // Map user 3 -> hash parameters entity 2
-        ScryptHashParametersMappingEntity userThreeMapping = new ScryptHashParametersMappingEntity();
+        ScryptHashParametersCredentialEntity userThreeMapping = new ScryptHashParametersCredentialEntity();
         userThreeMapping.setCredentialId("3");
         userThreeMapping.setHashParametersEntity(parametersEntityTwo);
         userThreeMapping.setId("3");
         parametersEntityTwo.getCredentialMappings().add(userThreeMapping);
 
         // Map user 4 -> hash parameters entity 2
-        ScryptHashParametersMappingEntity userFourMapping = new ScryptHashParametersMappingEntity();
+        ScryptHashParametersCredentialEntity userFourMapping = new ScryptHashParametersCredentialEntity();
         userFourMapping.setCredentialId("4");
         userFourMapping.setHashParametersEntity(parametersEntityTwo);
         userFourMapping.setId("4");

@@ -2,7 +2,7 @@ package com.smartmovesystems.keycloak.firebasescrypt;
 
 import com.lambdaworks.crypto.SCrypt;
 import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersMappingEntity;
+import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
 import org.apache.commons.codec.binary.Base64;
 import org.keycloak.credential.hash.PasswordHashProvider;
 import org.keycloak.models.PasswordPolicy;
@@ -78,7 +78,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
      * @return The scrypt hashing parameters, or default if no associated parameters found
      */
     private ScryptHashParametersEntity getParametersForCredential(PasswordCredentialModel credential) {
-        ScryptHashParametersMappingEntity result = parametersProvider.getMappingEntityForCredentialId(credential.getId());
+        ScryptHashParametersCredentialEntity result = parametersProvider.getMappingEntityForCredentialId(credential.getId());
         return result != null ? result.getHashParametersEntity() : defaultParams;
     }
 
