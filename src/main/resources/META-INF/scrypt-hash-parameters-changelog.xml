@@ -22,7 +22,11 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="SALT_SEP" type="BOOLEAN">
+            <column name="SALT_SEP" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="IS_DEFAULT" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
 

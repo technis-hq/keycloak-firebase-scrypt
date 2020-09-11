@@ -94,7 +94,7 @@ public class ScryptHashParametersEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ScryptHashParametersCredentialEntity that = (ScryptHashParametersCredentialEntity) o;
+        ScryptHashParametersEntity that = (ScryptHashParametersEntity) o;
         return Objects.equals(id, that.id);
     }
 
