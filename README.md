@@ -10,13 +10,13 @@ Implementation adapted from [firebase-scrypt-java](https://github.com/SmartMoveS
 
 ## Test with docker-compose
 ```bash
-cp build/libs/keycloak-firebase-scrypt-1.5.0.jar docker/
+cp build/libs/keycloak-firebase-scrypt-0.0.1.jar docker/
 docker-compose up -d
 ```
 
 ## Install
 ```
-curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/download/1.5.0/keycloak-firebase-scrypt-1.5.0.jar > KEYCLOAK_HOME/standalone/deployments/keycloak-firebase-scrypt-1.5.0.jar
+curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/download/0.0.1/keycloak-firebase-scrypt-1.5.0.jar > KEYCLOAK_HOME/standalone/deployments/keycloak-firebase-scrypt-0.0.1.jar
 ```
 You need to restart Keycloak.
 

@@ -10,7 +10,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
-      # TODO: values from env file
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: keycloak
       MYSQL_USER: keycloak
@@ -25,10 +24,10 @@ services:
       DB_ADDR: mysql
       DB_DATABASE: keycloak
       DB_USER: keycloak
-      # TODO: values from env file
       DB_PASSWORD: ${MYSQL_KC_PASSWORD}
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: ${KC_ADMIN_PASSWORD}
+#      KEYCLOAK_LOGLEVEL: DEBUG
     depends_on:
       - mysql
     ports:

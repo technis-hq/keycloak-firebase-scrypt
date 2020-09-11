@@ -1,1 +1,2 @@
 com.smartmovesystems.keycloak.firebasescrypt.ScryptHashParametersJpaEntityProviderFactory
+com.smartmovesystems.keycloak.firebasescrypt.ScryptHashParametersCredentialJpaEntityProviderFactory
