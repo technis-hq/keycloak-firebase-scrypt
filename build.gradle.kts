@@ -14,6 +14,7 @@ dependencies {
     val commonsCodecVersion = "1.4"
     val jbossLoggingVersion = "3.4.1.Final"
     val keycloakVersion = "10.0.1"
+    val jUnitVersion = "4.13"
 
     // Scrypt
     implementation("com.lambdaworks:scrypt:$scryptVersion")
@@ -30,7 +31,16 @@ dependencies {
     compileOnly("org.keycloak:keycloak-server-spi:$keycloakVersion")
     compileOnly("org.keycloak:keycloak-model-jpa:$keycloakVersion")
     compileOnly("org.keycloak:keycloak-server-spi-private:$keycloakVersion")
+
+    testImplementation("junit:junit:$jUnitVersion")
+    testImplementation("org.keycloak:keycloak-common:$keycloakVersion")
+    testImplementation("org.keycloak:keycloak-core:$keycloakVersion")
+    testImplementation("org.keycloak:keycloak-server-spi:$keycloakVersion")
+    testImplementation("org.keycloak:keycloak-model-jpa:$keycloakVersion")
+    testImplementation("org.keycloak:keycloak-server-spi-private:$keycloakVersion")
+    testImplementation("org.jboss.logging:jboss-logging:$jbossLoggingVersion")
 }
+
 
 tasks {
     jar {

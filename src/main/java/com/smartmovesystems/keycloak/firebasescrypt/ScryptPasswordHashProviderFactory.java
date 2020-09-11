@@ -12,8 +12,8 @@ public class ScryptPasswordHashProviderFactory implements PasswordHashProviderFa
 
     @Override
     public PasswordHashProvider create(KeycloakSession session) {
-
-        return new ScryptPasswordHashProvider(ID, session.getProvider(JpaConnectionProvider.class).getEntityManager());
+        ScryptParametersProvider parametersProvider = new ScryptParametersEntityProvider(session.getProvider(JpaConnectionProvider.class).getEntityManager());
+        return new ScryptPasswordHashProvider(ID, parametersProvider, new SecureSaltProvider());
     }
 
     @Override

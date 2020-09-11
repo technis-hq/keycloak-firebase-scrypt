@@ -35,8 +35,8 @@ public class ScryptHashParametersEntity implements Serializable {
     @Column(name = "IS_DEFAULT")
     private boolean isDefault;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "scryptParamsId")
-    private final Collection<ScryptHashParametersMappingEntity> credentialMappings = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hashParametersEntity")
+    private Collection<ScryptHashParametersMappingEntity> credentialMappings = new ArrayList<>();
 
     public String getId() {
         return id;

@@ -18,13 +18,10 @@ public class ScryptHashParametersMappingEntity implements Serializable {
     @Access(AccessType.PROPERTY)
     protected String id;
 
-    @Column(name = "SCRYPT_PARAMS_ID", length = 36)
-    private String scryptParamsId;
-
     @Column(name = "CREDENTIAL_ID", length = 36)
     private String credentialId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ScryptHashParametersEntity hashParametersEntity;
 
     public String getId() {
@@ -33,14 +30,6 @@ public class ScryptHashParametersMappingEntity implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getScryptParamsId() {
-        return scryptParamsId;
-    }
-
-    public void setScryptParamsId(String scryptParamsId) {
-        this.scryptParamsId = scryptParamsId;
     }
 
     public String getCredentialId() {

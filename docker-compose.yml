@@ -1,23 +1,31 @@
 version: '3'
 
+volumes:
+  mysql_data:
+    driver: local
+
 services:
-  postgres:
-    image: postgres
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
 
   keycloak:
     build: ./docker
     environment:
-      DB_ADDR: postgres
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
       DB_DATABASE: keycloak
       DB_USER: keycloak
-      DB_PASSWORD: keycloak
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
     depends_on:
-      - postgres
+      - mysql
     ports:
       - 8080:8080
-    security_opt:
-      label: disable

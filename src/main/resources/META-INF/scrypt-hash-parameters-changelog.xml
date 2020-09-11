@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="SmartMoveSystems" id="keycloak-firebase-scrypt-1.0">
+
+        <createTable tableName="SCRYPT_PARAMS">
+
+            <column name="ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ROUNDS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="MEM_COST" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="SIGNER" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="SALT_SEP" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addPrimaryKey columnNames="ID" constraintName="PK_SCRYPT_PARAMS_ID" tableName="SCRYPT_PARAMS"/>
+
+        <createTable tableName="SCRYPT_PARAMS_MAPPING">
+
+            <column name="ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="SCRYPT_PARAMS_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CREDENTIAL_ID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <createIndex indexName="IDX_CREDENTIAL_ID" tableName="SCRYPT_PARAMS_MAPPING">
+            <column name="CREDENTIAL_ID" type="VARCHAR(36)"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="SCRYPT_PARAMS_ID" baseTableName="SCRYPT_PARAMS_MAPPING" constraintName="FK_SCRYPT_PARAMS_MAPPING" referencedColumnNames="ID" referencedTableName="SCRYPT_PARAMS"/>
+        <addUniqueConstraint columnNames="CREDENTIAL_ID" constraintName="UK_CREDENTIAL_ID" tableName="SCRYPT_PARAMS_MAPPING"/>
+
+    </changeSet>
+
+</databaseChangeLog>

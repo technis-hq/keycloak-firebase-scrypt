@@ -11,14 +11,10 @@ import org.keycloak.models.credential.PasswordCredentialModel;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.Key;
-import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
@@ -27,26 +23,29 @@ import java.util.Arrays;
  */
 public class ScryptPasswordHashProvider implements PasswordHashProvider {
     private final String providerId;
-    private EntityManager entityManager;
+    private final ScryptParametersProvider parametersProvider;
     private static final Charset CHARSET = StandardCharsets.US_ASCII;
     private static final String CIPHER = "AES/CTR/NoPadding";
     private final ScryptHashParametersEntity defaultParams;
+    private final SaltProvider saltProvider;
 
-    public ScryptPasswordHashProvider(String providerId, EntityManager entityManager) {
+    public ScryptPasswordHashProvider(String providerId, ScryptParametersProvider parametersProvider, SaltProvider saltProvider) {
         this.providerId = providerId;
-        this.entityManager = entityManager;
-        defaultParams = entityManager.createNamedQuery("findDefault", ScryptHashParametersEntity.class).getSingleResult();
+        this.parametersProvider = parametersProvider;
+        defaultParams = parametersProvider.getDefaultParameters();
+        this.saltProvider = saltProvider;
     }
 
     @Override
     public boolean policyCheck(PasswordPolicy policy, PasswordCredentialModel credential) {
-        return providerId.equals(credential.getPasswordCredentialData().getAlgorithm());
+        return providerId.equals(credential.getPasswordCredentialData().getAlgorithm())
+                && providerId.equals(policy.getHashAlgorithm());
     }
 
     @Override
     public PasswordCredentialModel encodedCredential(String rawPassword, int iterations) {
 
-        byte[] salt = getSalt();
+        byte[] salt = saltProvider.getSalt();
 
         try {
             String encodedPassword = encode(rawPassword, new String(Base64.encodeBase64(salt), CHARSET), defaultParams);
@@ -56,7 +55,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
         }
     }
 
-    public String encode(String rawPassword, String salt, ScryptHashParametersEntity parameters) throws GeneralSecurityException {
+    private String encode(String rawPassword, String salt, ScryptHashParametersEntity parameters) throws GeneralSecurityException {
         byte[] rawEncrypted = getCipherText(
                 rawPassword,
                 salt,
@@ -66,16 +65,6 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
                 parameters.getMemCost()
         );
         return new String(Base64.encodeBase64(rawEncrypted), CHARSET);
-    }
-
-    /**
-     * Generates a random 11-byte salt, consistent with Firebase
-     * @return
-     */
-    private byte[] getSalt() {
-        byte[] out = new byte[11];
-        new SecureRandom().nextBytes(out);
-        return out;
     }
 
     @Override
@@ -89,20 +78,18 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
      * @return The scrypt hashing parameters, or default if no associated parameters found
      */
     private ScryptHashParametersEntity getParametersForCredential(PasswordCredentialModel credential) {
-        TypedQuery<ScryptHashParametersMappingEntity> query = entityManager.createNamedQuery("findForCredential", ScryptHashParametersMappingEntity.class);
-        query.setParameter("credentialId", credential.getId());
-        ScryptHashParametersMappingEntity result = query.getSingleResult();
+        ScryptHashParametersMappingEntity result = parametersProvider.getMappingEntityForCredentialId(credential.getId());
         return result != null ? result.getHashParametersEntity() : defaultParams;
     }
 
     @Override
     public boolean verify(String rawPassword, PasswordCredentialModel credential) {
         final String hash = credential.getPasswordSecretData().getValue();
-        final String salt = new String(credential.getPasswordSecretData().getSalt());
+        final String salt = new String(Base64.encodeBase64(credential.getPasswordSecretData().getSalt()));
         ScryptHashParametersEntity parameters = getParametersForCredential(credential);
         boolean verified;
         try {
-            verified = check(rawPassword, hash, salt, "", parameters.getBaser64Signer(), parameters.getRounds(), parameters.getMemCost());
+            verified = check(rawPassword, hash, salt, parameters.getSaltSeparator(), parameters.getBaser64Signer(), parameters.getRounds(), parameters.getMemCost());
         } catch (GeneralSecurityException e) {
             verified = false;
         }
@@ -147,9 +134,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
     private byte[] encrypt(byte[] signer, byte[] derivedKey) {
         try {
             Key key = generateKeyFromString(derivedKey);
-            byte[] nonce = ByteBuffer.allocate(8).putLong(0).array();
             byte[] iv = new byte[16];
-            System.arraycopy(nonce, 0, iv, 0, nonce.length);
             IvParameterSpec ivSpec = new IvParameterSpec(iv);
             Cipher c = Cipher.getInstance(CIPHER);
             c.init(Cipher.ENCRYPT_MODE, key, ivSpec);
