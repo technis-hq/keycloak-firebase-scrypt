@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.smartmovesystems.keycloak.firebasescrypt"
-version = "0.0.1"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
@@ -13,7 +13,7 @@ dependencies {
     val scryptVersion = "1.4.0"
     val commonsCodecVersion = "1.4"
     val jbossLoggingVersion = "3.4.1.Final"
-    val keycloakVersion = "10.0.1"
+    val keycloakVersion = "11.0.2"
     val jUnitVersion = "4.13"
 
     // Scrypt
