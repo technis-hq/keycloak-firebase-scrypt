@@ -45,3 +45,7 @@ Run `$KEYCLOAK_HOME/bin/standalone.sh`
 
 ## How to use
 Go to `Authentication` / `Password policy` and add hashing algorithm policy with value `firebase-scrypt`.
+
+## Importing users and hashing parameters:
+
+Use the [Firebase to Keycloak export/import tool](https://github.com/SmartMoveSystems/firebase-keycloak-importer) to get users from Firebase into Keycloak.

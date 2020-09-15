@@ -20,7 +20,6 @@ public class ScryptHashParametersResource {
 
     @POST
     @Path("")
-    @NoCache
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createHashParameters(ScryptHashParametersRepresentation rep) {
         ScryptHashParametersRepresentation created = session.getProvider(ScryptParametersProvider.class).addParameters(rep);
@@ -29,25 +28,9 @@ public class ScryptHashParametersResource {
 
     @GET
     @NoCache
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public ScryptHashParametersRepresentation getParameters(@PathParam("id") final String id) {
-        return session.getProvider(ScryptParametersProvider.class).getHashParametersById(id);
-    }
-
-    @GET
-    @NoCache
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ScryptHashParametersRepresentation> getAllParameters() {
         return session.getProvider(ScryptParametersProvider.class).getAllParameters();
-    }
-
-    @GET
-    @NoCache
-    @Path("/default")
-    @Produces(MediaType.APPLICATION_JSON)
-    public ScryptHashParametersRepresentation getDefaultParameters() {
-        return session.getProvider(ScryptParametersProvider.class).getDefaultParameters();
     }
 }
