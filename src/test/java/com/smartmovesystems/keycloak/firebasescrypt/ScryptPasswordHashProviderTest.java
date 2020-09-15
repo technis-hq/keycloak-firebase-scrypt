@@ -1,13 +1,15 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
 
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
+import com.smartmovesystems.keycloak.firebasescrypt.jpa.ScryptHashParametersEntity;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.keycloak.models.PasswordPolicy;
 import org.keycloak.models.credential.PasswordCredentialModel;
+import org.keycloak.util.JsonSerialization;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -15,53 +17,26 @@ public class ScryptPasswordHashProviderTest {
 
     private ScryptParametersMockProvider mockProvider;
     private ScryptPasswordHashProvider hashProvider;
+    private ScryptHashParametersRepresentation parametersEntityOne;
+    private ScryptHashParametersRepresentation parametersEntityTwo;
 
     @Before
     public void setUp() {
         mockProvider = new ScryptParametersMockProvider();
 
-        ScryptHashParametersEntity parametersEntityOne = new ScryptHashParametersEntity();
-        parametersEntityOne.setId("1");
+        parametersEntityOne = new ScryptHashParametersRepresentation();
         parametersEntityOne.setBaser64Signer("jxspr8Ki0RYycVU8zykbdLGjFQ3McFUH0uiiTvC8pVMXAn210wjLNmdZJzxUECKbm0QsEmYUSDzZvpjeJ9WmXA==");
         parametersEntityOne.setMemCost(14);
         parametersEntityOne.setRounds(8);
         parametersEntityOne.setSaltSeparator("Bw==");
         parametersEntityOne.setDefault(true);
 
-        // Map user 1 -> hash parameters entity 1
-        ScryptHashParametersCredentialEntity userOneMapping = new ScryptHashParametersCredentialEntity();
-        userOneMapping.setCredentialId("1");
-        userOneMapping.setHashParametersEntity(parametersEntityOne);
-        userOneMapping.setId("1");
-        parametersEntityOne.getCredentialMappings().add(userOneMapping);
-
-        // Map user 2 -> hash parameters entity 1
-        ScryptHashParametersCredentialEntity userTwoMapping = new ScryptHashParametersCredentialEntity();
-        userTwoMapping.setCredentialId("2");
-        userTwoMapping.setHashParametersEntity(parametersEntityOne);
-        userTwoMapping.setId("2");
-        parametersEntityOne.getCredentialMappings().add(userTwoMapping);
-
-        ScryptHashParametersEntity parametersEntityTwo = new ScryptHashParametersEntity();
+        parametersEntityTwo = new ScryptHashParametersRepresentation();
         parametersEntityTwo.setBaser64Signer("jxspr8Ki0ABCDVU8zykbdLGjFQ3McFUH0uiiTvC8pVMX1234567LNmdZJzxUECKbm0QsEmYUSDzZvpjeJ9WmXA==");
         parametersEntityTwo.setMemCost(14);
         parametersEntityTwo.setRounds(8);
         parametersEntityTwo.setSaltSeparator("Bw==");
         parametersEntityTwo.setDefault(false);
-
-        // Map user 3 -> hash parameters entity 2
-        ScryptHashParametersCredentialEntity userThreeMapping = new ScryptHashParametersCredentialEntity();
-        userThreeMapping.setCredentialId("3");
-        userThreeMapping.setHashParametersEntity(parametersEntityTwo);
-        userThreeMapping.setId("3");
-        parametersEntityTwo.getCredentialMappings().add(userThreeMapping);
-
-        // Map user 4 -> hash parameters entity 2
-        ScryptHashParametersCredentialEntity userFourMapping = new ScryptHashParametersCredentialEntity();
-        userFourMapping.setCredentialId("4");
-        userFourMapping.setHashParametersEntity(parametersEntityTwo);
-        userFourMapping.setId("4");
-        parametersEntityTwo.getCredentialMappings().add(userFourMapping);
 
         mockProvider.add(parametersEntityOne);
         mockProvider.add(parametersEntityTwo);
@@ -123,13 +98,17 @@ public class ScryptPasswordHashProviderTest {
     }
 
     @Test
-    public void verifyUserOne() {
+    public void verifyUserOne() throws IOException {
         PasswordCredentialModel model = PasswordCredentialModel.createFromValues(
                 ScryptPasswordHashProviderFactory.ID,
                 Base64.decodeBase64("42xEC+ixf3L2lw=="),
                 0,
                 "lSrfV15cpx95/sZS2W9c9Kp6i/LVgQNDNC/qzrCnh1SAyZvqmZqAjTdn3aoItz+VHjoZilo78198JAdRuid5lQ=="
         );
+
+        ScryptPasswordCredentialData credentialData = new ScryptPasswordCredentialData(0, "firebase-scrypt", parametersEntityOne.id);
+
+        model.setCredentialData(JsonSerialization.writeValueAsString(credentialData));
 
         model.setId("1");
 
@@ -138,13 +117,17 @@ public class ScryptPasswordHashProviderTest {
     }
 
     @Test
-    public void verifyUserOneBadPassword() {
+    public void verifyUserOneBadPassword() throws IOException {
         PasswordCredentialModel model = PasswordCredentialModel.createFromValues(
                 ScryptPasswordHashProviderFactory.ID,
                 Base64.decodeBase64("42xEC+ixf3L2lw=="),
                 0,
                 "lSrfV15cpx95/sZS2W9c9Kp6i/LVgQNDNC/qzrCnh1SAyZvqmZqAjTdn3aoItz+VHjoZilo78198JAdRuid5lQ=="
         );
+
+        ScryptPasswordCredentialData credentialData = new ScryptPasswordCredentialData(0, "firebase-scrypt", parametersEntityOne.id);
+
+        model.setCredentialData(JsonSerialization.writeValueAsString(credentialData));
 
         model.setId("1");
 
@@ -160,6 +143,8 @@ public class ScryptPasswordHashProviderTest {
                 0,
                 "lSrfV15cpx95/sZS2W9c9Kp6i/LVgQNDNC/qzrCnh1SAyZvqmZqAjTdn3aoItz+VHjoZilo78198JAdRuid5lQ=="
         );
+
+        // Just use default
 
         model.setId("2");
 

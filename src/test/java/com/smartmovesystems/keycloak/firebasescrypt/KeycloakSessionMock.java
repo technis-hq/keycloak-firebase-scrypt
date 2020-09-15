@@ -5,6 +5,7 @@ import org.keycloak.models.*;
 import org.keycloak.models.cache.UserCache;
 import org.keycloak.policy.PasswordPolicyProvider;
 import org.keycloak.provider.Provider;
+import org.keycloak.services.clientpolicy.ClientPolicyManager;
 import org.keycloak.sessions.AuthenticationSessionProvider;
 import org.keycloak.storage.federated.UserFederatedStorageProvider;
 import org.keycloak.vault.VaultTranscriber;
@@ -66,6 +67,11 @@ public class KeycloakSessionMock implements KeycloakSession {
     }
 
     @Override
+    public <T> T getAttributeOrDefault(String attribute, T defaultValue) {
+        return null;
+    }
+
+    @Override
     public Object removeAttribute(String attribute) {
         return null;
     }
@@ -87,6 +93,11 @@ public class KeycloakSessionMock implements KeycloakSession {
 
     @Override
     public RealmProvider realms() {
+        return null;
+    }
+
+    @Override
+    public ClientProvider clients() {
         return null;
     }
 
@@ -167,6 +178,11 @@ public class KeycloakSessionMock implements KeycloakSession {
 
     @Override
     public VaultTranscriber vault() {
+        return null;
+    }
+
+    @Override
+    public ClientPolicyManager clientPolicy() {
         return null;
     }
 }

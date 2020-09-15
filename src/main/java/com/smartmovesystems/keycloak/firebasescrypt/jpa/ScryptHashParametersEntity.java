@@ -1,21 +1,27 @@
 package com.smartmovesystems.keycloak.firebasescrypt.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "SCRYPT_PARAMS")
 @NamedQueries({
-    @NamedQuery(name = "findDefault", query = "SELECT s FROM ScryptHashParametersEntity s WHERE s.isDefault = TRUE")
+    @NamedQuery(name = "findDefault", query = "SELECT s FROM ScryptHashParametersEntity s WHERE s.isDefault = TRUE"),
+    @NamedQuery(name = "findById", query = "SELECT s FROM ScryptHashParametersEntity s WHERE s.id = :id")
 })
 public class ScryptHashParametersEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     @Column(name = "ID", length = 36)
     @Access(AccessType.PROPERTY)
     protected String id;
@@ -34,9 +40,6 @@ public class ScryptHashParametersEntity implements Serializable {
 
     @Column(name = "IS_DEFAULT")
     private boolean isDefault;
-
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Collection<ScryptHashParametersCredentialEntity> credentialMappings = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -84,10 +87,6 @@ public class ScryptHashParametersEntity implements Serializable {
 
     public void setDefault(boolean aDefault) {
         isDefault = aDefault;
-    }
-
-    public Collection<ScryptHashParametersCredentialEntity> getCredentialMappings() {
-        return credentialMappings;
     }
 
     @Override

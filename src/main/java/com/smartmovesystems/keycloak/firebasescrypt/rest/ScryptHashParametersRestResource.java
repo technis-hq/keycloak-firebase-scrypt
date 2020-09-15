@@ -1,0 +1,37 @@
+package com.smartmovesystems.keycloak.firebasescrypt.rest;
+
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.services.ForbiddenException;
+import org.keycloak.services.managers.AppAuthManager;
+import org.keycloak.services.managers.AuthenticationManager;
+
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.Path;
+
+public class ScryptHashParametersRestResource {
+    private final KeycloakSession session;
+    private final AuthenticationManager.AuthResult auth;
+
+    public ScryptHashParametersRestResource(KeycloakSession session) {
+        this.session = session;
+        this.auth = new AppAuthManager().authenticateBearerToken(session);
+    }
+
+    /**
+     * Checks that requesting user has admin access
+     * @return
+     */
+    @Path("parameters")
+    public ScryptHashParametersResource getHashParametersResourceAuthenticated() {
+        checkRealmAdmin();
+        return new ScryptHashParametersResource(session);
+    }
+
+    private void checkRealmAdmin() {
+        if (auth == null) {
+            throw new NotAuthorizedException("Bearer");
+        } else if (auth.getToken().getRealmAccess() == null || !auth.getToken().getRealmAccess().isUserInRole("admin")) {
+            throw new ForbiddenException("Does not have realm admin role");
+        }
+    }
+}

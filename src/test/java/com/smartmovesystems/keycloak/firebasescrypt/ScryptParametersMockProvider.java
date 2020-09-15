@@ -1,39 +1,49 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
+import java.util.UUID;
 
 public class ScryptParametersMockProvider implements ScryptParametersProvider {
 
-    private List<ScryptHashParametersEntity> parametersEntityList = new ArrayList<>();
+    private List<ScryptHashParametersRepresentation> parametersEntityList = new ArrayList<>();
 
-    public void add(ScryptHashParametersEntity scryptHashParameters) {
+    public void add(ScryptHashParametersRepresentation scryptHashParameters) {
         parametersEntityList.add(scryptHashParameters);
     }
 
-
     @Override
-    public ScryptHashParametersCredentialEntity getMappingEntityForCredentialId(String credentialId) {
-        // There should only be one parameter mapping per credential Id
-        return parametersEntityList
-                .stream()
-                .map(ScryptHashParametersEntity::getCredentialMappings)
-                .flatMap(Collection::stream)
-                .filter(mapping -> mapping.getCredentialId().equals(credentialId))
-                .findFirst().orElse(null);
+    public ScryptHashParametersRepresentation addParameters(ScryptHashParametersRepresentation rep) {
+        rep.setId(UUID.randomUUID().toString());
+        parametersEntityList.add(rep);
+        return rep;
     }
 
     @Override
-    public ScryptHashParametersEntity getDefaultParameters() {
+    public ScryptHashParametersRepresentation getHashParametersById(String parametersId) {
         return parametersEntityList
                 .stream()
-                .filter(ScryptHashParametersEntity::isDefault)
+                .filter(params -> parametersId.equals(params.getId()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public ScryptHashParametersRepresentation getDefaultParameters() {
+        return parametersEntityList
+                .stream()
+                .filter(ScryptHashParametersRepresentation::isDefault)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public List<ScryptHashParametersRepresentation> getAllParameters() {
+        return parametersEntityList;
+    }
+
+    @Override
+    public void close() {
+
     }
 }

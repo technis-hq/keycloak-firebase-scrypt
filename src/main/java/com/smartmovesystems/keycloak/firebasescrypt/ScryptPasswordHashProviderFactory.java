@@ -1,7 +1,7 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
+import com.smartmovesystems.keycloak.firebasescrypt.impl.ScryptParametersProviderImpl;
 import org.keycloak.Config;
-import org.keycloak.connections.jpa.JpaConnectionProvider;
 import org.keycloak.credential.hash.PasswordHashProvider;
 import org.keycloak.credential.hash.PasswordHashProviderFactory;
 import org.keycloak.models.KeycloakSession;
@@ -12,7 +12,7 @@ public class ScryptPasswordHashProviderFactory implements PasswordHashProviderFa
 
     @Override
     public PasswordHashProvider create(KeycloakSession session) {
-        ScryptParametersProvider parametersProvider = new ScryptParametersEntityProvider(session.getProvider(JpaConnectionProvider.class).getEntityManager());
+        ScryptParametersProvider parametersProvider = new ScryptParametersProviderImpl(session);
         return new ScryptPasswordHashProvider(ID, parametersProvider, new SecureSaltProvider());
     }
 

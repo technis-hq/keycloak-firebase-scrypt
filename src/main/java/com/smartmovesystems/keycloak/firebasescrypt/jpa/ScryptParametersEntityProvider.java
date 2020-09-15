@@ -1,7 +1,6 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
 import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -13,11 +12,10 @@ public class ScryptParametersEntityProvider implements ScryptParametersProvider 
     public ScryptParametersEntityProvider(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
     @Override
-    public ScryptHashParametersCredentialEntity getMappingEntityForCredentialId(String credentialId) {
-        TypedQuery<ScryptHashParametersCredentialEntity> query = entityManager.createNamedQuery("findForCredential", ScryptHashParametersCredentialEntity.class);
-        query.setParameter("credentialId", credentialId);
+    public ScryptHashParametersEntity getHashParametersById(String parametersId) {
+        TypedQuery<ScryptHashParametersEntity> query = entityManager.createNamedQuery("findById", ScryptHashParametersEntity.class);
+        query.setParameter("id", parametersId);
         return query.getSingleResult();
     }
 

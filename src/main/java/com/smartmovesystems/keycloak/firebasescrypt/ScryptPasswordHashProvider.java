@@ -1,16 +1,16 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
 import com.lambdaworks.crypto.SCrypt;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersCredentialEntity;
 import org.apache.commons.codec.binary.Base64;
 import org.keycloak.credential.hash.PasswordHashProvider;
 import org.keycloak.models.PasswordPolicy;
 import org.keycloak.models.credential.PasswordCredentialModel;
+import org.keycloak.util.JsonSerialization;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -26,7 +26,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
     private final ScryptParametersProvider parametersProvider;
     private static final Charset CHARSET = StandardCharsets.US_ASCII;
     private static final String CIPHER = "AES/CTR/NoPadding";
-    private final ScryptHashParametersEntity defaultParams;
+    private final ScryptHashParametersRepresentation defaultParams;
     private final SaltProvider saltProvider;
 
     public ScryptPasswordHashProvider(String providerId, ScryptParametersProvider parametersProvider, SaltProvider saltProvider) {
@@ -55,7 +55,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
         }
     }
 
-    private String encode(String rawPassword, String salt, ScryptHashParametersEntity parameters) throws GeneralSecurityException {
+    private String encode(String rawPassword, String salt, ScryptHashParametersRepresentation parameters) throws GeneralSecurityException {
         byte[] rawEncrypted = getCipherText(
                 rawPassword,
                 salt,
@@ -77,20 +77,25 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
      * @param credential
      * @return The scrypt hashing parameters, or default if no associated parameters found
      */
-    private ScryptHashParametersEntity getParametersForCredential(PasswordCredentialModel credential) {
-        ScryptHashParametersCredentialEntity result = parametersProvider.getMappingEntityForCredentialId(credential.getId());
-        return result != null ? result.getHashParametersEntity() : defaultParams;
+    private ScryptHashParametersRepresentation getParametersForCredential(PasswordCredentialModel credential) throws IOException {
+        ScryptPasswordCredentialData credentialData = JsonSerialization.readValue(credential.getCredentialData(),
+                ScryptPasswordCredentialData.class);
+        ScryptHashParametersRepresentation result = null;
+        if (credentialData != null && credentialData.getHashParametersId() != null) {
+            result = parametersProvider.getHashParametersById(credentialData.getHashParametersId());
+        }
+        return result != null ? result : defaultParams;
     }
 
     @Override
     public boolean verify(String rawPassword, PasswordCredentialModel credential) {
         final String hash = credential.getPasswordSecretData().getValue();
         final String salt = new String(Base64.encodeBase64(credential.getPasswordSecretData().getSalt()));
-        ScryptHashParametersEntity parameters = getParametersForCredential(credential);
         boolean verified;
         try {
+            ScryptHashParametersRepresentation parameters = getParametersForCredential(credential);
             verified = check(rawPassword, hash, salt, parameters.getSaltSeparator(), parameters.getBaser64Signer(), parameters.getRounds(), parameters.getMemCost());
-        } catch (GeneralSecurityException e) {
+        } catch (GeneralSecurityException | IOException e) {
             verified = false;
         }
         return verified;
