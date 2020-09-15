@@ -1,6 +1,5 @@
-package com.smartmovesystems.keycloak.firebasescrypt;
+package com.smartmovesystems.keycloak.firebasescrypt.jpa;
 
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
 import org.keycloak.connections.jpa.entityprovider.JpaEntityProvider;
 
 import java.util.Collections;

@@ -1,26 +1,44 @@
-package com.smartmovesystems.keycloak.firebasescrypt;
+package com.smartmovesystems.keycloak.firebasescrypt.jpa;
 
-import com.smartmovesystems.keycloak.firebasescrypt.model.ScryptHashParametersEntity;
+import com.smartmovesystems.keycloak.firebasescrypt.ScryptHashParametersRepresentation;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.List;
+import java.util.UUID;
 
-public class ScryptParametersEntityProvider implements ScryptParametersProvider {
+public class ScryptParametersEntityProvider {
 
     private final EntityManager entityManager;
 
     public ScryptParametersEntityProvider(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    @Override
     public ScryptHashParametersEntity getHashParametersById(String parametersId) {
         TypedQuery<ScryptHashParametersEntity> query = entityManager.createNamedQuery("findById", ScryptHashParametersEntity.class);
         query.setParameter("id", parametersId);
         return query.getSingleResult();
     }
 
-    @Override
     public ScryptHashParametersEntity getDefaultParameters() {
         return entityManager.createNamedQuery("findDefault", ScryptHashParametersEntity.class).getSingleResult();
+    }
+
+    public List<ScryptHashParametersEntity> getAllParameters() {
+        return entityManager.createNamedQuery("findAll", ScryptHashParametersEntity.class).getResultList();
+    }
+
+    public ScryptHashParametersEntity addHashParameters(ScryptHashParametersRepresentation rep) {
+        ScryptHashParametersEntity entity = new ScryptHashParametersEntity();
+        entity.setId(UUID.randomUUID().toString());
+        entity.setRounds(rep.getRounds());
+        entity.setMemCost(rep.getMemCost());
+        entity.setBaser64Signer(rep.getBaser64Signer());
+        entity.setSaltSeparator(rep.getSaltSeparator());
+        entity.setDefault(rep.isDefault());
+
+        entityManager.persist(entity);
+
+        return entity;
     }
 }

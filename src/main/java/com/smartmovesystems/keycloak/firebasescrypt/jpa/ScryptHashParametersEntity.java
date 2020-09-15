@@ -1,6 +1,4 @@
-package com.smartmovesystems.keycloak.firebasescrypt.model;
-
-import org.hibernate.annotations.GenericGenerator;
+package com.smartmovesystems.keycloak.firebasescrypt.jpa;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,18 +8,14 @@ import java.util.Objects;
 @Table(name = "SCRYPT_PARAMS")
 @NamedQueries({
     @NamedQuery(name = "findDefault", query = "SELECT s FROM ScryptHashParametersEntity s WHERE s.isDefault = TRUE"),
-    @NamedQuery(name = "findById", query = "SELECT s FROM ScryptHashParametersEntity s WHERE s.id = :id")
+    @NamedQuery(name = "findById", query = "SELECT s FROM ScryptHashParametersEntity s WHERE s.id = :id"),
+    @NamedQuery(name = "findAll", query = "SELECT s FROM ScryptHashParametersEntity s")
 })
 public class ScryptHashParametersEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-        name = "UUID",
-        strategy = "org.hibernate.id.UUIDGenerator"
-    )
     @Column(name = "ID", length = 36)
     @Access(AccessType.PROPERTY)
     protected String id;
