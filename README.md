@@ -11,7 +11,7 @@ Implementation adapted from [firebase-scrypt-java](https://github.com/SmartMoveS
 ## Test with docker-compose
 
 ```bash
-cp build/libs/keycloak-firebase-scrypt-2.0.2.jar docker/
+cp build/libs/keycloak-firebase-scrypt-2.0.3.jar docker/
 docker-compose up -d
 ```
 
@@ -20,7 +20,7 @@ docker-compose up -d
 ### Docker
 
 ```
-curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/download/2.0.2/keycloak-firebase-scrypt-2.0.2.jar > KEYCLOAK_HOME/standalone/deployments/keycloak-firebase-scrypt-2.0.2.jar
+curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/download/2.0.3/keycloak-firebase-scrypt-2.0.3.jar > KEYCLOAK_HOME/standalone/deployments/keycloak-firebase-scrypt-2.0.3.jar
 ```
 You need to restart Keycloak.
 
@@ -29,7 +29,7 @@ You need to restart Keycloak.
 Deploy module:
 
 ```
-$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=com.smartmovesystems.keycloak.firebasescrypt --resources=build/libs/keycloak-firebase-scrypt-2.0.2.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase"
+$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=com.smartmovesystems.keycloak.firebasescrypt --resources=build/libs/keycloak-firebase-scrypt-2.0.3.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase"
 ```
 
 Register provider in `standalone/configuration/standalone.xml`:
