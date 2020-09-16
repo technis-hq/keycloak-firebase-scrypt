@@ -59,7 +59,7 @@ public class ScryptHashParametersEntity implements Serializable {
         this.memCost = memCost;
     }
 
-    public String getBaser64Signer() {
+    public String getBase64Signer() {
         return baser64Signer;
     }
 

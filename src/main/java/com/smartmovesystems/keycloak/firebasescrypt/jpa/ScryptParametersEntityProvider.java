@@ -33,7 +33,7 @@ public class ScryptParametersEntityProvider {
         entity.setId(UUID.randomUUID().toString());
         entity.setRounds(rep.getRounds());
         entity.setMemCost(rep.getMemCost());
-        entity.setBaser64Signer(rep.getBaser64Signer());
+        entity.setBaser64Signer(rep.getBase64Signer());
         entity.setSaltSeparator(rep.getSaltSeparator());
         entity.setDefault(rep.isDefault());
 

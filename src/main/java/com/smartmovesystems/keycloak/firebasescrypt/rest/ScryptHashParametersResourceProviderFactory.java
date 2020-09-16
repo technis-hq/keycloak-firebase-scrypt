@@ -8,7 +8,7 @@ import org.keycloak.services.resource.RealmResourceProviderFactory;
 
 public class ScryptHashParametersResourceProviderFactory implements RealmResourceProviderFactory {
 
-    public static final String ID = "scrypt";
+    public static final String ID = "scrypt-parameters";
 
     @Override
     public RealmResourceProvider create(KeycloakSession session) {

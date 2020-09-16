@@ -5,12 +5,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.keycloak.credential.hash.PasswordHashProvider;
 import org.keycloak.models.PasswordPolicy;
 import org.keycloak.models.credential.PasswordCredentialModel;
-import org.keycloak.util.JsonSerialization;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -60,7 +58,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
                 rawPassword,
                 salt,
                 parameters.getSaltSeparator(),
-                parameters.getBaser64Signer(),
+                parameters.getBase64Signer(),
                 parameters.getRounds(),
                 parameters.getMemCost()
         );
@@ -74,28 +72,29 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
 
     /**
      * Attempt to get the correct scrypt hashing parameters for the credential entity
-     * @param credential
+     * @param parametersId
      * @return The scrypt hashing parameters, or default if no associated parameters found
      */
-    private ScryptHashParametersRepresentation getParametersForCredential(PasswordCredentialModel credential) throws IOException {
-        ScryptPasswordCredentialData credentialData = JsonSerialization.readValue(credential.getCredentialData(),
-                ScryptPasswordCredentialData.class);
+    private ScryptHashParametersRepresentation getParametersForCredential(String parametersId) {
         ScryptHashParametersRepresentation result = null;
-        if (credentialData != null && credentialData.getHashParametersId() != null) {
-            result = parametersProvider.getHashParametersById(credentialData.getHashParametersId());
+        if (parametersId != null) {
+            result = parametersProvider.getHashParametersById(parametersId);
         }
         return result != null ? result : defaultParams;
     }
 
     @Override
     public boolean verify(String rawPassword, PasswordCredentialModel credential) {
-        final String hash = credential.getPasswordSecretData().getValue();
+        final String storedHash = credential.getPasswordSecretData().getValue();
+        final String[] storedHashParts = storedHash.split("\\$");
         final String salt = new String(Base64.encodeBase64(credential.getPasswordSecretData().getSalt()));
+        final String hashedPassword = storedHashParts[0];
+        final String hashParametersId = storedHashParts.length > 1 ? storedHashParts[1] : "";
         boolean verified;
         try {
-            ScryptHashParametersRepresentation parameters = getParametersForCredential(credential);
-            verified = check(rawPassword, hash, salt, parameters.getSaltSeparator(), parameters.getBaser64Signer(), parameters.getRounds(), parameters.getMemCost());
-        } catch (GeneralSecurityException | IOException e) {
+            ScryptHashParametersRepresentation parameters = getParametersForCredential(hashParametersId);
+            verified = check(rawPassword, hashedPassword, salt, parameters.getSaltSeparator(), parameters.getBase64Signer(), parameters.getRounds(), parameters.getMemCost());
+        } catch (GeneralSecurityException e) {
             verified = false;
         }
         return verified;

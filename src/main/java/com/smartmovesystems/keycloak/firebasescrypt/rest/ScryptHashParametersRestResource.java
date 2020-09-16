@@ -21,7 +21,7 @@ public class ScryptHashParametersRestResource {
      * Checks that requesting user has admin access
      * @return
      */
-    @Path("parameters")
+    @Path("")
     public ScryptHashParametersResource getHashParametersResourceAuthenticated() {
         checkRealmAdmin();
         return new ScryptHashParametersResource(session);

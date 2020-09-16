@@ -11,7 +11,7 @@ public class ScryptHashParametersRepresentation {
         id = entity.getId();
         rounds = entity.getRounds();
         memCost = entity.getMemCost();
-        baser64Signer = entity.getBaser64Signer();
+        base64Signer = entity.getBase64Signer();
         saltSeparator = entity.getSaltSeparator();
         isDefault = entity.isDefault();
     }
@@ -22,7 +22,7 @@ public class ScryptHashParametersRepresentation {
 
     private int memCost;
 
-    private String baser64Signer;
+    private String base64Signer;
 
     private String saltSeparator;
 
@@ -52,12 +52,12 @@ public class ScryptHashParametersRepresentation {
         this.memCost = memCost;
     }
 
-    public String getBaser64Signer() {
-        return baser64Signer;
+    public String getBase64Signer() {
+        return base64Signer;
     }
 
-    public void setBaser64Signer(String baser64Signer) {
-        this.baser64Signer = baser64Signer;
+    public void setBase64Signer(String base64Signer) {
+        this.base64Signer = base64Signer;
     }
 
     public String getSaltSeparator() {
@@ -74,5 +74,17 @@ public class ScryptHashParametersRepresentation {
 
     public void setDefault(boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    @Override
+    public String toString() {
+        return "ScryptHashParametersRepresentation{" +
+                "id='" + id + '\'' +
+                ", rounds=" + rounds +
+                ", memCost=" + memCost +
+                ", baser64Signer='" + base64Signer + '\'' +
+                ", saltSeparator='" + saltSeparator + '\'' +
+                ", isDefault=" + isDefault +
+                '}';
     }
 }

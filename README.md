@@ -29,7 +29,7 @@ You need to restart Keycloak.
 Deploy module:
 
 ```
-$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=org.keycloak.examples.domain-extension-example --resources=build/libs/keycloak-firebase-scrypt-2.0.2.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase"
+$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=com.smartmovesystems.keycloak.firebasescrypt --resources=build/libs/keycloak-firebase-scrypt-2.0.2.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase"
 ```
 
 Register provider in `standalone/configuration/standalone.xml`:
