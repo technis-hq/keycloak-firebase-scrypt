@@ -1,1 +1,8 @@
-<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.0" />
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.0" >
+    <deployment>
+        <dependencies>
+            <module name="org.hibernate" />
+            <module name="deployment.keycloak-firebase-scrypt-2.0.2.jar" />
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>

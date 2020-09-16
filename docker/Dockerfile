@@ -1,3 +1,3 @@
-FROM jboss/keycloak:10.0.1
+FROM jboss/keycloak:11.0.2
 
-COPY ./keycloak-firebase-scrypt-0.0.1.jar /opt/jboss/keycloak/standalone/deployments/
+COPY ./keycloak-firebase-scrypt-2.0.2.jar /opt/jboss/keycloak/standalone/deployments/
