@@ -3,26 +3,26 @@
 Add a password hash provider to handle password hashing with the custom [Firebase Scrypt](https://github.com/firebase/scrypt) algorithm inside Keycloak.
 Implementation adapted from [firebase-scrypt-java](https://github.com/SmartMoveSystems/firebase-scrypt-java) and [leroyguillaume/keycloak-bcrypt](https://github.com/leroyguillaume/keycloak-bcrypt).
 
-## Build
+## Build from source
 ```bash
 ./gradlew jar
 ```
 
-## Test with docker-compose
-
-```bash
-cp build/libs/keycloak-firebase-scrypt-2.0.3.jar docker/
-docker-compose up -d
-```
-
-## Install
-
-### Docker
+## Download latest built version
 
 ```
 curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/download/2.0.3/keycloak-firebase-scrypt-2.0.3.jar > KEYCLOAK_HOME/standalone/deployments/keycloak-firebase-scrypt-2.0.3.jar
 ```
-You need to restart Keycloak.
+
+## Run
+
+## docker-compose
+
+```bash
+cp deploy.cli docker/
+cp build/libs/keycloak-firebase-scrypt-2.0.3.jar docker/
+docker-compose up -d
+```
 
 ### Standalone
 
