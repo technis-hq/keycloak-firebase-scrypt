@@ -3,6 +3,7 @@ package com.smartmovesystems.keycloak.firebasescrypt.jpa;
 import com.smartmovesystems.keycloak.firebasescrypt.ScryptHashParametersRepresentation;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class ScryptParametersEntityProvider {
         return query.getSingleResult();
     }
 
-    public ScryptHashParametersEntity getDefaultParameters() {
+    public ScryptHashParametersEntity getDefaultParameters() throws NoResultException {
         return entityManager.createNamedQuery("findDefault", ScryptHashParametersEntity.class).getSingleResult();
     }
 

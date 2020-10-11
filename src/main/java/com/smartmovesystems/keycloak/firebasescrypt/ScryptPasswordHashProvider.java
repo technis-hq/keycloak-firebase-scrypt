@@ -14,23 +14,25 @@ import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Provides password hash verification for users imported from multiple different Firebase projects using Google's
  * customised Scrypt/AES password hashing algorithm
  */
 public class ScryptPasswordHashProvider implements PasswordHashProvider {
+    private final Logger logger = Logger.getLogger(ScryptPasswordHashProvider.class.getName());
     private final String providerId;
     private final ScryptParametersProvider parametersProvider;
     private static final Charset CHARSET = StandardCharsets.US_ASCII;
     private static final String CIPHER = "AES/CTR/NoPadding";
-    private final ScryptHashParametersRepresentation defaultParams;
+    private  ScryptHashParametersRepresentation defaultParams;
     private final SaltProvider saltProvider;
 
     public ScryptPasswordHashProvider(String providerId, ScryptParametersProvider parametersProvider, SaltProvider saltProvider) {
         this.providerId = providerId;
         this.parametersProvider = parametersProvider;
-        defaultParams = parametersProvider.getDefaultParameters();
         this.saltProvider = saltProvider;
     }
 
@@ -46,9 +48,15 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
         byte[] salt = saltProvider.getSalt();
 
         try {
-            String encodedPassword = encode(rawPassword, new String(Base64.encodeBase64(salt), CHARSET), defaultParams);
+            ScryptHashParametersRepresentation defParams = getDefault();
+            if (defParams == null) {
+                logger.log(Level.SEVERE, "Cannot encode credential--no default hash parameters");
+                return null;
+            }
+            String encodedPassword = encode(rawPassword, new String(Base64.encodeBase64(salt), CHARSET), defParams);
             return PasswordCredentialModel.createFromValues(providerId, salt, iterations, encodedPassword);
         } catch (GeneralSecurityException e) {
+            logger.log(Level.SEVERE, "Error encoding credential", e);
             return null;
         }
     }
@@ -80,7 +88,19 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
         if (parametersId != null) {
             result = parametersProvider.getHashParametersById(parametersId);
         }
-        return result != null ? result : defaultParams;
+        return result != null ? result : getDefault();
+    }
+
+    private ScryptHashParametersRepresentation getDefault() {
+        try {
+            if (defaultParams == null) {
+                defaultParams = parametersProvider.getDefaultParameters();
+            }
+            return defaultParams;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error retrieving default hashing parameters", e);
+        }
+        return null;
     }
 
     @Override
@@ -90,12 +110,16 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
         final String salt = new String(Base64.encodeBase64(credential.getPasswordSecretData().getSalt()));
         final String hashedPassword = storedHashParts[0];
         final String hashParametersId = storedHashParts.length > 1 ? storedHashParts[1] : "";
-        boolean verified;
+        boolean verified = false;
         try {
             ScryptHashParametersRepresentation parameters = getParametersForCredential(hashParametersId);
-            verified = check(rawPassword, hashedPassword, salt, parameters.getSaltSeparator(), parameters.getBase64Signer(), parameters.getRounds(), parameters.getMemCost());
+            if (parameters != null) {
+                verified = check(rawPassword, hashedPassword, salt, parameters.getSaltSeparator(), parameters.getBase64Signer(), parameters.getRounds(), parameters.getMemCost());
+            } else {
+                logger.log(Level.SEVERE, "Cannot verify credential--no valid hash parameters");
+            }
         } catch (GeneralSecurityException e) {
-            verified = false;
+            logger.log(Level.SEVERE, "Error verifying credential", e);
         }
         return verified;
     }
