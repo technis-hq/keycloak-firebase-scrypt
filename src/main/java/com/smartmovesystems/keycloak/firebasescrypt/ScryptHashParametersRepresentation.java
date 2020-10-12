@@ -16,6 +16,15 @@ public class ScryptHashParametersRepresentation {
         isDefault = entity.isDefault();
     }
 
+    public ScryptHashParametersRepresentation(String id, int rounds, int memCost, String base64Signer, String saltSeparator, boolean isDefault) {
+        this.id = id;
+        this.rounds = rounds;
+        this.memCost = memCost;
+        this.base64Signer = base64Signer;
+        this.saltSeparator = saltSeparator;
+        this.isDefault = isDefault;
+    }
+
     protected String id;
 
     private int rounds;

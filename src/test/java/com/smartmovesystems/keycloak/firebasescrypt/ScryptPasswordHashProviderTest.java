@@ -16,10 +16,11 @@ public class ScryptPasswordHashProviderTest {
     private ScryptPasswordHashProvider hashProvider;
     private ScryptHashParametersRepresentation parametersEntityOne;
     private ScryptHashParametersRepresentation parametersEntityTwo;
+    private ScryptParametersMockProvider mockProvider;
 
     @Before
     public void setUp() {
-        ScryptParametersMockProvider mockProvider = new ScryptParametersMockProvider();
+        mockProvider = new ScryptParametersMockProvider();
 
         parametersEntityOne = new ScryptHashParametersRepresentation();
         parametersEntityOne.id = UUID.randomUUID().toString();
@@ -91,9 +92,24 @@ public class ScryptPasswordHashProviderTest {
     @Test
     public void encodedCredential() {
         // Expect to use default hash parameters
-        String expected = "{\"value\":\"lSrfV15cpx95/sZS2W9c9Kp6i/LVgQNDNC/qzrCnh1SAyZvqmZqAjTdn3aoItz+VHjoZilo78198JAdRuid5lQ==\",\"salt\":\"42xEC+ixf3L2lw==\"}";
+        String expected = "{\"value\":\"lSrfV15cpx95/sZS2W9c9Kp6i/LVgQNDNC/qzrCnh1SAyZvqmZqAjTdn3aoItz+VHjoZilo78198JAdRuid5lQ==$" + parametersEntityOne.id + "\",\"salt\":\"42xEC+ixf3L2lw==\"}";
         PasswordCredentialModel encoded = hashProvider.encodedCredential("user1password", 0);
         assertEquals(expected, encoded.getSecretData());
+    }
+
+    @Test
+    public void encodedCredentialWithoutDefault() {
+        mockProvider.clear();
+        PasswordCredentialModel model = hashProvider.encodedCredential("test", 0);
+        assertEquals("HUoznV1w4qjGMFUe2gKz+fmGai83WSaerGPwGYJvzXGHTMkwsaHqT1gWlFCFZwk7ei2HmD4pp8OXEiaavv+OEA==", model.getPasswordSecretData().getValue());
+        assertEquals("42xEC+ixf3L2lw==", new String(Base64.encodeBase64(model.getPasswordSecretData().getSalt())));
+    }
+
+    @Test
+    public void verifyWithoutDefault() {
+        mockProvider.clear();
+        boolean verified = hashProvider.verify("test", hashProvider.encodedCredential("test", 0));
+        assertTrue(verified);
     }
 
     @Test

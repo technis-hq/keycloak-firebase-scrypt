@@ -1,15 +1,20 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ScryptParametersMockProvider implements ScryptParametersProvider {
 
-    private List<ScryptHashParametersRepresentation> parametersEntityList = new ArrayList<>();
+    private final List<ScryptHashParametersRepresentation> parametersEntityList = new ArrayList<>();
 
     public void add(ScryptHashParametersRepresentation scryptHashParameters) {
         parametersEntityList.add(scryptHashParameters);
+    }
+
+    public void clear() {
+        parametersEntityList.clear();
     }
 
     @Override
@@ -21,20 +26,28 @@ public class ScryptParametersMockProvider implements ScryptParametersProvider {
 
     @Override
     public ScryptHashParametersRepresentation getHashParametersById(String parametersId) {
-        return parametersEntityList
+        ScryptHashParametersRepresentation params = parametersEntityList
                 .stream()
-                .filter(params -> parametersId.equals(params.getId()))
+                .filter(p -> parametersId.equals(p.getId()))
                 .findFirst()
                 .orElse(null);
+        if (params == null) {
+            throw new NoResultException();
+        }
+        return params;
     }
 
     @Override
     public ScryptHashParametersRepresentation getDefaultParameters() {
-        return parametersEntityList
+        ScryptHashParametersRepresentation def = parametersEntityList
                 .stream()
                 .filter(ScryptHashParametersRepresentation::isDefault)
                 .findFirst()
                 .orElse(null);
+        if (def == null) {
+            throw new NoResultException();
+        }
+        return def;
     }
 
     @Override

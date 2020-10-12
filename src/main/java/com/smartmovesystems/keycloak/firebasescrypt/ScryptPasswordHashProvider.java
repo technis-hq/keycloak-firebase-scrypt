@@ -27,6 +27,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
     private final ScryptParametersProvider parametersProvider;
     private static final Charset CHARSET = StandardCharsets.US_ASCII;
     private static final String CIPHER = "AES/CTR/NoPadding";
+    private static final String DEFAULT_SALT_SEP = "Bw==";
     private  ScryptHashParametersRepresentation defaultParams;
     private final SaltProvider saltProvider;
 
@@ -54,8 +55,11 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
                 return null;
             }
             String encodedPassword = encode(rawPassword, new String(Base64.encodeBase64(salt), CHARSET), defParams);
+            if (defParams.id != null) {
+                encodedPassword += "$" + defParams.id;
+            }
             return PasswordCredentialModel.createFromValues(providerId, salt, iterations, encodedPassword);
-        } catch (GeneralSecurityException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Error encoding credential", e);
             return null;
         }
@@ -98,9 +102,17 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
             }
             return defaultParams;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error retrieving default hashing parameters", e);
+            logger.log(Level.WARNING, "Error retrieving default hashing parameters, using fallback", e);
         }
-        return null;
+        return fallbackDefault();
+    }
+
+    /**
+     * If no default hashing parameters have been added yet, just use scrypt without pepper
+     * @return
+     */
+    private ScryptHashParametersRepresentation fallbackDefault() {
+        return new ScryptHashParametersRepresentation(null, 8, 14, null, DEFAULT_SALT_SEP, true);
     }
 
     @Override
@@ -109,7 +121,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
         final String[] storedHashParts = storedHash.split("\\$");
         final String salt = new String(Base64.encodeBase64(credential.getPasswordSecretData().getSalt()));
         final String hashedPassword = storedHashParts[0];
-        final String hashParametersId = storedHashParts.length > 1 ? storedHashParts[1] : "";
+        final String hashParametersId = storedHashParts.length > 1 ? storedHashParts[1] : null;
         boolean verified = false;
         try {
             ScryptHashParametersRepresentation parameters = getParametersForCredential(hashParametersId);
@@ -148,9 +160,14 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
         // hashing password
         byte[] hashedBytes = hashWithSalt(passwd, salt, saltSep, rounds, memcost);
 
-        // encrypting with aes
-        byte[] signerBytes = Base64.decodeBase64(signer.getBytes(CHARSET));
-        return encrypt(signerBytes, hashedBytes);
+        if (signer != null) {
+            // encrypting with aes
+            byte[] signerBytes = Base64.decodeBase64(signer.getBytes(CHARSET));
+            return encrypt(signerBytes, hashedBytes);
+        } else {
+            // No signer configured, just use scrpyt hashing
+            return hashedBytes;
+        }
     }
 
     /**
