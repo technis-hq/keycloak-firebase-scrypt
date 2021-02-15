@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.Key;
-import java.util.Arrays;
+import java.security.MessageDigest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -153,7 +153,7 @@ public class ScryptPasswordHashProvider implements PasswordHashProvider {
 
         byte[] knownCipherTextBytes = Base64.decodeBase64(knownCipherText.getBytes(CHARSET));
 
-        return Arrays.equals(knownCipherTextBytes, cipherTextBytes);
+        return MessageDigest.isEqual(knownCipherTextBytes, cipherTextBytes);
     }
 
     private byte[] getCipherText(String passwd, String salt, String saltSep, String signer, int rounds, int memcost) throws GeneralSecurityException {
