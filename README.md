@@ -11,7 +11,7 @@ Implementation adapted from [firebase-scrypt-java](https://github.com/SmartMoveS
 ## Download latest built version
 
 ```
-curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/download/2.1.0/keycloak-firebase-scrypt-2.1.0.jar > KEYCLOAK_HOME/standalone/deployments/keycloak-firebase-scrypt-2.1.0.jar
+curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/download/2.1.2/keycloak-firebase-scrypt-2.1.2.jar > KEYCLOAK_HOME/standalone/deployments/keycloak-firebase-scrypt-2.1.2.jar
 ```
 
 ## Run
@@ -20,7 +20,7 @@ curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/do
 
 ```bash
 cp deploy.cli docker/
-cp build/libs/keycloak-firebase-scrypt-2.1.0.jar docker/
+cp build/libs/keycloak-firebase-scrypt-2.1.2.jar docker/
 docker-compose up -d
 ```
 
@@ -29,7 +29,7 @@ docker-compose up -d
 Deploy module:
 
 ```
-$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=com.smartmovesystems.keycloak.firebasescrypt --resources=build/libs/keycloak-firebase-scrypt-2.1.0.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase"
+$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=com.smartmovesystems.keycloak.firebasescrypt --resources=build/libs/keycloak-firebase-scrypt-2.1.2.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase"
 ```
 
 Register provider in `standalone/configuration/standalone.xml`:
