@@ -18,7 +18,7 @@ dependencies {
     val scryptVersion = "1.4.0"
     val commonsCodecVersion = "1.4"
     val jbossLoggingVersion = "3.4.1.Final"
-    val keycloakVersion = "11.0.2"
+    val keycloakVersion = "12.0.4"
     val jUnitVersion = "4.13"
 
     // Scrypt

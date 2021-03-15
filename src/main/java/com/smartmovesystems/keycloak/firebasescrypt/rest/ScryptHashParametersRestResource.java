@@ -14,7 +14,7 @@ public class ScryptHashParametersRestResource {
 
     public ScryptHashParametersRestResource(KeycloakSession session) {
         this.session = session;
-        this.auth = new AppAuthManager().authenticateBearerToken(session);
+        this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
     }
 
     /**
