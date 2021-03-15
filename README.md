@@ -53,3 +53,7 @@ Use the [Firebase to Keycloak export/import tool](https://github.com/SmartMoveSy
 ## Multiple Firebase projects
 
 Importing users from multiple Firebase projects with different hash parameters is supported. All new users created after user import will have their passwords hashed using the hash parameters defined as the [default](https://github.com/SmartMoveSystems/firebase-keycloak-importer#usage). If no hash parameter set is defined as the default, new users' passwords will be hashed using Scrypt only, as opposed to the custom [firebase-scrypt-java](https://github.com/SmartMoveSystems/firebase-scrypt-java) implementation.
+
+## Releases
+
+Releases are handled by GitHub Actions when a new tag is pushed to origin.
