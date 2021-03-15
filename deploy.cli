@@ -1,7 +1,7 @@
 embed-server --std-out=echo  --server-config=standalone-ha.xml
 if (outcome != success) of /core-service=module-loading/:list-resource-loader-paths(module=com.smartmovesystems.keycloak.firebasescrypt)
     echo adding module com.smartmovesystems.keycloak.firebasescrypt
-    module add --name=com.smartmovesystems.keycloak.firebasescrypt --resources=/opt/jboss/keycloak/keycloak-firebase-scrypt-2.1.2.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase
+    module add --name=com.smartmovesystems.keycloak.firebasescrypt --resources=/opt/jboss/keycloak/keycloak-firebase-scrypt-3.0.2.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-model-jpa,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.ws.rs.api,javax.persistence.api,org.hibernate,org.javassist,org.liquibase
     /subsystem=keycloak-server:list-add(name=providers, value=module:com.smartmovesystems.keycloak.firebasescrypt)
 else
     echo module com.smartmovesystems.keycloak.firebasescrypt already installed
