@@ -3,12 +3,12 @@ plugins {
 }
 
 group = "com.smartmovesystems.keycloak.firebasescrypt"
-version = "3.0.3"
+version = "3.0.4"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
+//java {
+////    sourceCompatibility = JavaVersion.VERSION_1_8
+////    targetCompatibility = JavaVersion.VERSION_1_8
+//}
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ dependencies {
     val scryptVersion = "1.4.0"
     val commonsCodecVersion = "1.4"
     val jbossLoggingVersion = "3.4.1.Final"
-    val keycloakVersion = "12.0.4"
+    val keycloakVersion = "22.0.3"
     val jUnitVersion = "4.13"
 
     // Scrypt

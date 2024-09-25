@@ -2,7 +2,8 @@ package com.smartmovesystems.keycloak.firebasescrypt;
 
 import org.keycloak.provider.Provider;
 
-import javax.persistence.NoResultException;
+import jakarta.persistence.NoResultException;
+
 import java.util.List;
 
 public interface ScryptParametersProvider extends Provider {

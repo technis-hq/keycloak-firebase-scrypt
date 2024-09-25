@@ -20,6 +20,7 @@ public class ScryptHashParametersSpi implements Spi {
         return ScryptParametersProvider.class;
     }
 
+
     @Override
     public Class<? extends ProviderFactory> getProviderFactoryClass() {
         return ScryptParametersProviderFactory.class;

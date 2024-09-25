@@ -21,7 +21,7 @@ curl -L https://github.com/SmartMoveSystems/keycloak-firebase-scrypt/releases/do
 ```bash
 cp deploy.cli docker/
 cp build/libs/keycloak-firebase-scrypt-3.0.3.jar docker/
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Standalone

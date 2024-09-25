@@ -102,6 +102,16 @@ public class KeycloakSessionMock implements KeycloakSession {
     }
 
     @Override
+    public GroupProvider groups() {
+        return null;
+    }
+
+    @Override
+    public RoleProvider roles() {
+        return null;
+    }
+
+    @Override
     public UserSessionProvider sessions() {
         return null;
     }
@@ -132,6 +142,16 @@ public class KeycloakSessionMock implements KeycloakSession {
     }
 
     @Override
+    public RoleProvider roleStorageManager() {
+        return null;
+    }
+
+    @Override
+    public GroupProvider groupStorageManager() {
+        return null;
+    }
+
+    @Override
     public UserProvider userStorageManager() {
         return null;
     }
@@ -153,6 +173,16 @@ public class KeycloakSessionMock implements KeycloakSession {
 
     @Override
     public ClientProvider clientLocalStorage() {
+        return null;
+    }
+
+    @Override
+    public GroupProvider groupLocalStorage() {
+        return null;
+    }
+
+    @Override
+    public RoleProvider roleLocalStorage() {
         return null;
     }
 

@@ -1,6 +1,8 @@
 package com.smartmovesystems.keycloak.firebasescrypt.jpa;
 
-import javax.persistence.*;
+//import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
