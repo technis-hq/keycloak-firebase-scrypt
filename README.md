@@ -4,6 +4,7 @@ Add a password hash provider to handle password hashing with the custom [Firebas
 Implementation adapted from [firebase-scrypt-java](https://github.com/SmartMoveSystems/firebase-scrypt-java) and [leroyguillaume/keycloak-bcrypt](https://github.com/leroyguillaume/keycloak-bcrypt).
 
 ## Build from source
+
 ```bash
 ./gradlew jar
 ```
@@ -44,6 +45,7 @@ Register provider in `standalone/configuration/standalone.xml`:
 Run `$KEYCLOAK_HOME/bin/standalone.sh`
 
 ## How to use
+
 Go to `Authentication` / `Password policy` and add hashing algorithm policy with value `firebase-scrypt`.
 
 ## Importing users and hashing parameters:
@@ -52,7 +54,9 @@ Use the [Firebase to Keycloak export/import tool](https://github.com/SmartMoveSy
 
 ## Multiple Firebase projects
 
-Importing users from multiple Firebase projects with different hash parameters is supported. All new users created after user import will have their passwords hashed using the hash parameters defined as the [default](https://github.com/SmartMoveSystems/firebase-keycloak-importer#usage). If no hash parameter set is defined as the default, new users' passwords will be hashed using Scrypt only, as opposed to the custom [firebase-scrypt-java](https://github.com/SmartMoveSystems/firebase-scrypt-java) implementation.
+Importing users from multiple Firebase projects with different hash parameters is supported. All new users created after user import will have their passwords hashed using the hash parameters defined as the [default](https://github.com/SmartMoveSystems/firebase-keycloak-importer#usage).
+
+If no hash parameter set is defined as the default, new users' passwords will be hashed using Scrypt only, as opposed to the custom [firebase-scrypt-java](https://github.com/SmartMoveSystems/firebase-scrypt-java) implementation.
 
 ## Releases
 
