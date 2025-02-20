@@ -1,36 +1,44 @@
-version: '3'
-
-volumes:
-  mysql_data:
-    driver: local
-
 services:
-  mysql:
-    image: mysql:5.7
-#    volumes:
-#      - mysql_data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: keycloak
-      MYSQL_USER: keycloak
-      MYSQL_PASSWORD: password
+  postgres:
+    image: postgres:16-alpine
     ports:
-      - 3306:3306
-
-  keycloak:
-    build: ./docker
+      - 5432:5432
     environment:
-      DB_VENDOR: MYSQL
-      DB_ADDR: localhost
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PORT: 3306
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: password
-#      KEYCLOAK_LOGLEVEL: DEBUG
-#      KEYCLOAK_FRONTEND_URL: ${KC_KEYCLOAK_FRONTEND_URL}
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: admin
+      POSTGRES_DB: keycloak
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - scrypt-network
+  keycloak:
+    image: keycloak/keycloak:26.0
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/postgres
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: password
+      KC_LOG_LEVEL: info
+      KC_HTTP_ENABLED: true
+      KC_METRICS_ENABLED: false
+      KC_HEALTH_ENABLED: false
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+    command: start-dev
+    volumes:
+      - ./build/libs/keycloak-firebase-scrypt-latest.jar:/opt/keycloak/providers/keycloak-firebase-scrypt-latest.jar
     depends_on:
-      - mysql
+      - postgres
     ports:
       - 8080:8080
+      - 9000:9000
+    networks:
+      - scrypt-network
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  scrypt-network:
+    driver: bridge

@@ -2,7 +2,7 @@ plugins { java }
 
 group = "com.smartmovesystems.keycloak.firebasescrypt"
 
-version = if (project.hasProperty("newVersion")) project.property("newVersion") as String else "3.0.4"
+version = if (project.hasProperty("newVersion")) project.property("newVersion") as String else "latest"
 
 repositories { mavenCentral() }
 
