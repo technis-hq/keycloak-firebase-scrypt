@@ -25,4 +25,5 @@ public class ScryptHashParametersSpi implements Spi {
     public Class<? extends ProviderFactory> getProviderFactoryClass() {
         return ScryptParametersProviderFactory.class;
     }
+
 }

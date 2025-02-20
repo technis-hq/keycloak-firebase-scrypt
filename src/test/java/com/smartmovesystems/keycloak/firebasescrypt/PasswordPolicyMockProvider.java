@@ -5,6 +5,8 @@ import org.keycloak.models.UserModel;
 import org.keycloak.policy.PasswordPolicyProvider;
 import org.keycloak.policy.PolicyError;
 
+import org.junit.jupiter.api.*;
+@Disabled("test")
 public class PasswordPolicyMockProvider implements PasswordPolicyProvider {
     @Override
     public PolicyError validate(RealmModel realm, UserModel user, String password) {

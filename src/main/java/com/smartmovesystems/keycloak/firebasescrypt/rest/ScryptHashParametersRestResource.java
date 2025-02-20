@@ -1,14 +1,10 @@
 package com.smartmovesystems.keycloak.firebasescrypt.rest;
 
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.services.ForbiddenException;
+import jakarta.ws.rs.ForbiddenException;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
-
-//import javax.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotAuthorizedException;
-
-//import javax.ws.rs.Path;
 import jakarta.ws.rs.Path;
 
 

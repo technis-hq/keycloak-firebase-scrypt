@@ -1,7 +1,9 @@
 package com.smartmovesystems.keycloak.firebasescrypt;
 
 import org.apache.commons.codec.binary.Base64;
+import org.junit.jupiter.api.*;
 
+@Disabled("test")
 public class SaltMockProvider implements SaltProvider {
 
     private String saltBase64 = "42xEC+ixf3L2lw==";
